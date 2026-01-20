@@ -1,0 +1,63 @@
+name: gtnh
+services:
+  app:
+    image: itzg/minecraft-server:java25
+    environment:
+      EULA: true
+      TYPE: CUSTOM
+      USE_MEOWICE_FLAGS: true
+      JVM_OPTS: "-Dfml.readTimeout=180 @java9args.txt"
+      GENERIC_PACKS: 2.8.4
+      GENERIC_PACKS_SUFFIX: _Server_Java_17-25.zip
+      GENERIC_PACKS_PREFIX: https://downloads.gtnewhorizons.com/ServerPacks/GT_New_Horizons_
+      SKIP_GENERIC_PACK_UPDATE_CHECK: "true"
+      MEMORY: 8G
+      CUSTOM_SERVER: "https://github.com/GTNewHorizons/lwjgl3ify/releases/download/2.1.16/lwjgl3ify-2.1.16-forgePatches.jar"
+      MOTD: "GT:New Horizons 2.8.4"
+      DIFFICULTY: "hard"
+      ENABLE_COMMAND_BLOCK: "true"
+      SPAWN_PROTECTION: 1
+      VIEW_DISTANCE: 8
+      MODE: 0
+      LEVEL_TYPE: "rwg"
+      ALLOW_FLIGHT: "TRUE"
+    x-casaos:
+      envs:
+        - container: EULA
+          description:
+            en_us: 'You must accept the EULA for the server to launch.'
+        - container: USE_MEOWICE_FLAGS
+          description:
+            en_us: 'Generally good flags for garbage collection.'
+        - container: GENERIC_PACKS
+          description:
+            en_us: 'Pack version.'
+    ports:
+      - target: 25565
+        published: 25565
+        protocol: tcp
+    volumes:
+      - type: bind
+        source: /DATA/AppData/$AppID/data
+        target: /data
+      - type: bind
+        source: /etc/timezone
+        target: /etc/timezone
+        mode: ro
+x-casaos:
+  architectures:
+    - amd64
+    - arm64
+    - arm
+  main: app
+  description:
+    en_us: 'This docker image sets up a GregTech: New Horizons Server that will automatically download the latest stable version at startup. (2.8.4 currently) You can also run/upgrade to any specific version.'
+  tagline:
+    en_us: 'This docker image sets up a GregTech: New Horizons Server that will automatically download the latest stable version at startup. (2.8.4 currently) You can also run/upgrade to any specific version.'
+  developer: ''
+  author: lostinsos
+  icon: https://camo.githubusercontent.com/21ef92d0dedb388e84a3e31ee6247f5ad69a0a22b83ebae6af2032b2aa763e84/68747470733a2f2f7777772e67746e6577686f72697a6f6e732e636f6d2f6769746875622f6269675f676e642e77656270
+  thumbnail: https://camo.githubusercontent.com/21ef92d0dedb388e84a3e31ee6247f5ad69a0a22b83ebae6af2032b2aa763e84/68747470733a2f2f7777772e67746e6577686f72697a6f6e732e636f6d2f6769746875622f6269675f676e642e77656270
+  title:
+    en_us: 'GregTech: New Horizons'
+  category: Modpack
