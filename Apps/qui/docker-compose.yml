@@ -1,0 +1,44 @@
+name: qui
+services:
+  app:
+    container_name: qui
+    image: ghcr.io/autobrr/qui:v1.12.0
+    restart: unless-stopped
+    ports:
+      - "7476:7476"
+    network_mode: bridge
+    volumes:
+      - /DATA/AppData/$AppID/config:/config
+    environment:
+      - QUI__TRACKER_ICONS_FETCH_ENABLED=true
+    x-casaos:
+      envs:
+        - container: QUI__TRACKER_ICONS_FETCH_ENABLED
+          description:
+            en_us: 'Controls whether or not qui grabs the icons for trackers'
+      volumes:
+        - container: /config
+          description:
+            en_us: 'Container Path: /config'
+      ports:
+        - container: "7476"
+          description:
+            en_us: 'Container Port: 7476'
+x-casaos:
+  architectures:
+    - amd64
+    - arm64
+  main: app
+  description:
+    en_us: "A fast, modern web interface for qBittorrent. Supports managing multiple qBittorrent instances from a single, lightweight application."
+  tagline:
+    en_us: A fast, modern web interface for qBittorrent
+  developer: zze0s
+  author: lostinsos
+  icon: https://raw.githubusercontent.com/autobrr/qui/5bd2706f479e1f8c90780d579ad0288fc03fd7db/web/public/icons.svg
+
+  thumbnail: "https://raw.githubusercontent.com/autobrr/qui/refs/heads/develop/.github/assets/qui.png"
+  title:
+    en_us: qui
+  category: Web
+  port_map: "7476"
