@@ -1,6 +1,6 @@
 name: qui
 services:
-  app:
+  qui:
     container_name: qui
     image: ghcr.io/autobrr/qui:v1.12.0
     restart: unless-stopped
@@ -9,6 +9,7 @@ services:
     network_mode: bridge
     volumes:
       - /DATA/AppData/$AppID/config:/config
+      - /home/$USER/Downloads/qbittorrent:/data/torrents
     environment:
       - QUI__TRACKER_ICONS_FETCH_ENABLED=true
     x-casaos:
@@ -19,18 +20,66 @@ services:
       volumes:
         - container: /config
           description:
-            en_us: 'Container Path: /config'
+            en_us: 'Configuration path'
+        - container: /data/torrents
+          description:
+            en_us: 'Download path (Make sure this is the same path as qbittorrent)'
       ports:
         - container: "7476"
           description:
-            en_us: 'Container Port: 7476'
+            en_us: 'qui port'
+  qbittorrent:
+    container_name: qui
+    image: linuxserver/qbittorrent:5.1.4
+    restart: unless-stopped
+    environment:
+      PUID: $PUID
+      PGID: $PGID
+      TZ: $TZ
+      WEBUI_PORT: ''
+      TORRENTING_PORT: ''
+    x-casaos:
+      envs:
+        - container: PUID
+          description:
+            en_us: Run 'id [USER]' for the owner of the host volume directories to get the UID to use here.
+        - container: PGID
+          description:
+            en_us: Run 'id [USER]' for the owner of the host volume directories to get the GID to use here.
+        - container: TZ
+          description:
+            en_us: Specify a timezone to use, see this list.
+        - container: WEBUI_PORT
+          description:
+            en_us: For changing the port of the web UI, see below for explanation
+        - container: TORRENTING_PORT
+          description:
+            en_us: For changing the port of tcp/udp connection, see below for explanation
+    ports:
+      - target: 8080
+        published: 8080
+        protocol: tcp
+      - target: 6881
+        published: 6881
+        protocol: tcp
+      - target: 6881
+        published: 6881
+        protocol: udp
+    volumes:
+      - type: bind
+        source: /DATA/AppData/$AppID/config
+        target: /config
+      - type: bind
+        source: /home/$USER/Downloads/qbittorrent
+        target: /downloads
+
 x-casaos:
   architectures:
     - amd64
     - arm64
-  main: app
+  main: qui
   description:
-    en_us: "A fast, modern web interface for qBittorrent. Supports managing multiple qBittorrent instances from a single, lightweight application."
+    en_us: "A fast, modern web interface for qBittorrent. Supports managing multiple qBittorrent instances from a single, lightweight quilication."
   tagline:
     en_us: A fast, modern web interface for qBittorrent
   developer: zze0s
