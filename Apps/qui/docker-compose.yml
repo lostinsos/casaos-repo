@@ -1,17 +1,20 @@
 name: qui
 services:
-  qui:
+  immich-server:
     container_name: qui
     image: ghcr.io/autobrr/qui:v1.12.0
-    restart: unless-stopped
     ports:
       - 7476:7476
-    network_mode: bridge
     volumes:
       - /DATA/AppData/$AppID/config:/config
       - /home/$USER/Downloads/qbittorrent:/data/torrents
     environment:
-      - QUI__TRACKER_ICONS_FETCH_ENABLED=true
+      QUI__TRACKER_ICONS_FETCH_ENABLED: true
+    depends_on:
+      - qbittorrent
+    restart: unless-stopped
+    networks:
+      - lostinsos-qui-network
     x-casaos:
       envs:
         - container: QUI__TRACKER_ICONS_FETCH_ENABLED
@@ -23,21 +26,25 @@ services:
             en_us: 'Configuration path'
         - container: /data/torrents
           description:
-            en_us: 'Download path (Make sure this is the same path as qbittorrent)'
+            en_us: 'Download path (Make sure this is the same path as qBittorrent)'
       ports:
-        - container: "7476"
+        - container: "2283"
           description:
-            en_us: 'qui port'
+            en_us: 'Container Port: 2283'
   qbittorrent:
     container_name: qbittorrent
     image: linuxserver/qbittorrent:5.1.4
-    restart: unless-stopped
+    volumes:
+      - /DATA/AppData/$AppID/model-cache:/cache
     environment:
       PUID: $PUID
       PGID: $PGID
       TZ: $TZ
       WEBUI_PORT: ''
       TORRENTING_PORT: ''
+    restart: unless-stopped
+    networks:
+      - lostinsos-qui-network
     x-casaos:
       envs:
         - container: PUID
@@ -55,23 +62,27 @@ services:
         - container: TORRENTING_PORT
           description:
             en_us: For changing the port of tcp/udp connection, see below for explanation
-    ports:
-      - target: 8080
-        published: 8080
-        protocol: tcp
-      - target: 6881
-        published: 6881
-        protocol: tcp
-      - target: 6881
-        published: 6881
-        protocol: udp
-    volumes:
-      - type: bind
-        source: /DATA/AppData/$AppID/config
-        target: /config
-      - type: bind
-        source: /home/$USER/Downloads/qbittorrent
-        target: /downloads
+      ports:
+        - target: 8080
+          published: 8080
+          protocol: tcp
+        - target: 6881
+          published: 6881
+          protocol: tcp
+        - target: 6881
+          published: 6881
+          protocol: udp
+      volumes:
+        - type: bind
+          source: /DATA/AppData/$AppID/config
+          target: /config
+        - type: bind
+          source: /home/$USER/Downloads/qbittorrent
+          target: /downloads
+
+networks:
+  lostinsos-qui-network:
+    driver: bridge
 
 x-casaos:
   architectures:
