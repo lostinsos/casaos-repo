@@ -1,6 +1,6 @@
 name: qui
 services:
-  immich-server:
+  qui:
     container_name: qui
     image: ghcr.io/autobrr/qui:v1.12.0
     ports:
