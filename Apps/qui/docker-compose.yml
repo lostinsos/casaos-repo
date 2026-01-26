@@ -34,6 +34,9 @@ services:
   qbittorrent:
     container_name: qbittorrent
     image: linuxserver/qbittorrent:5.1.4
+    volumes:
+      - /home/$USER/Downloads/qbittorrent:/downloads
+      - /DATA/AppData/$AppID/config:/config
     environment:
       PUID: $PUID
       PGID: $PGID
