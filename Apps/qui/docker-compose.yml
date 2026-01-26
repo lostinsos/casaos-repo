@@ -34,8 +34,6 @@ services:
   qbittorrent:
     container_name: qbittorrent
     image: linuxserver/qbittorrent:5.1.4
-    volumes:
-      - /DATA/AppData/$AppID/model-cache:/cache
     environment:
       PUID: $PUID
       PGID: $PGID
