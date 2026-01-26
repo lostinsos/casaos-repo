@@ -28,12 +28,16 @@ services:
           description:
             en_us: 'Download path (Make sure this is the same path as qBittorrent)'
       ports:
-        - container: "2283"
+        - container: "7476"
           description:
-            en_us: 'Container Port: 2283'
+            en_us: 'Container Port: 7476'
   qbittorrent:
     container_name: qbittorrent
     image: linuxserver/qbittorrent:5.1.4
+    ports:
+      - 8080:8080
+      - 6881:6881/tcp
+      - 6881:6881/udp
     volumes:
       - /home/$USER/Downloads/qbittorrent:/downloads
       - /DATA/AppData/$AppID/config:/config
@@ -91,7 +95,7 @@ x-casaos:
     - arm64
   main: qui
   description:
-    en_us: "A fast, modern web interface for qBittorrent. Supports managing multiple qBittorrent instances from a single, lightweight quilication."
+    en_us: "A fast, modern web interface for qBittorrent. Supports managing multiple qBittorrent instances from a single, lightweight application."
   tagline:
     en_us: A fast, modern web interface for qBittorrent
   developer: zze0s
