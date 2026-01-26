@@ -5,7 +5,7 @@ services:
     image: ghcr.io/autobrr/qui:v1.12.0
     restart: unless-stopped
     ports:
-      - "7476:7476"
+      - 7476:7476
     network_mode: bridge
     volumes:
       - /DATA/AppData/$AppID/config:/config
@@ -29,7 +29,7 @@ services:
           description:
             en_us: 'qui port'
   qbittorrent:
-    container_name: qui
+    container_name: qbittorrent
     image: linuxserver/qbittorrent:5.1.4
     restart: unless-stopped
     environment:
@@ -85,7 +85,6 @@ x-casaos:
   developer: zze0s
   author: lostinsos
   icon: https://raw.githubusercontent.com/autobrr/qui/5bd2706f479e1f8c90780d579ad0288fc03fd7db/web/public/icons.svg
-
   thumbnail: "https://raw.githubusercontent.com/autobrr/qui/refs/heads/develop/.github/assets/qui.png"
   title:
     en_us: qui
