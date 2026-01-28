@@ -1,0 +1,59 @@
+name: copyparty
+services:
+  copyparty:
+    container_name: copyparty
+    image: copyparty/ac:latest
+    user: "1000:1000"
+    ports:
+      - 3923:3923
+    volumes:
+      - /DATA/AppData/$AppID/config:/cfg:z
+      - /home/$USER/Downloads:/w:z
+    environment:
+      LD_PRELOAD: /usr/lib/libmimalloc-secure.so.NOPE
+      PYTHONUNBUFFERED: "1"
+    stop_grace_period: 15s
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "wget --spider -q 127.0.0.1:3923/?reset=/._"]
+      interval: 1m
+      timeout: 2s
+      retries: 5
+      start_period: 15s
+    x-casaos:
+      envs:
+        - container: LD_PRELOAD
+          description:
+            en_us: 'enable mimalloc by replacing "NOPE" with "2" for a nice speed-boost (will use twice as much ram)'
+        - container: PYTHONUNBUFFERED
+          description:
+            en_us: 'ensures log-messages are not delayed (but can reduce speed a tiny bit)'
+      ports:
+        - container: "3923"
+          description:
+            en_us: 'Web UI Port'
+      volumes:
+        - container: /cfg
+          description:
+            en_us: 'Configuration directory'
+        - container: /w
+          description:
+            en_us: 'Download/Upload directory'
+
+x-casaos:
+  architectures:
+    - amd64
+    - arm64
+  main: copyparty
+  description:
+    en_us: "Portable file server with accelerated resumable uploads, dedup, WebDAV, SFTP, FTP, TFTP, zeroconf, media indexer, thumbnails++ all in one file"
+  tagline:
+    en_us: Portable file server with accelerated resumable uploads.
+  developer: 9001
+  author: lostinsos
+  icon: https://raw.githubusercontent.com/9001/copyparty/hovudstraum/docs/logo.svg
+  thumbnail: https://user-images.githubusercontent.com/241032/129636211-abd20fa2-a953-4366-9423-1c88ebb96ba9.png
+  title:
+    en_us: copyparty
+  category: Web
+  port_map: "3923"
