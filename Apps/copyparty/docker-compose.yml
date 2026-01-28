@@ -48,7 +48,7 @@ x-casaos:
     en_us: "Portable file server with accelerated resumable uploads, dedup, WebDAV, SFTP, FTP, TFTP, zeroconf, media indexer, thumbnails++ all in one file"
   tagline:
     en_us: Portable file server with accelerated resumable uploads.
-  developer: 9001
+  developer: "9001"
   author: lostinsos
   icon: https://raw.githubusercontent.com/9001/copyparty/hovudstraum/docs/logo.svg
   thumbnail: https://user-images.githubusercontent.com/241032/129636211-abd20fa2-a953-4366-9423-1c88ebb96ba9.png
